@@ -1,3 +1,4 @@
+require "dps/dns"
 require "dps/version"
 
 module DPS
