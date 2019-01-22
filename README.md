@@ -1,4 +1,4 @@
-# DPS Ruby library (gem)
+# DPS Ruby gem
 
-This library is a collection of tools to help interact with or implement a DPS (Direct Payment Standard) server.
+This Ruby library is a collection of tools to help interact with or implement a DPS (Direct Payment Standard) server.
 
