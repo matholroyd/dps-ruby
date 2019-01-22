@@ -6,8 +6,10 @@ Gem::Specification.new do |s|
   s.description = "Direct Payment Standard (DPS) specifies a common way for entities to advertise payment options as well as facilitate payments directly between 2 parties. This library contains tools to interact with or implement a DPS server."
   s.authors     = ["Mat Holroyd"]
   s.email       = 'dps@matholroyd.com'
-  s.files       = ["lib/dps.rb"]
-  s.homepage    =
-    'https://github.com/matholroyd/dps-ruby'
-  s.license       = 'MIT'
+  s.files       = %w{
+    lib/dps.rb
+    lib/dps/dns.rb
+  }
+  s.homepage    = 'https://github.com/matholroyd/dps-ruby'
+  s.license     = 'MIT'
 end
