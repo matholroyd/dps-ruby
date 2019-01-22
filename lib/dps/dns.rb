@@ -3,83 +3,42 @@ require 'dnsruby'
 module DPS
   class DNS
     
-    class InvalidRecord; end
-    class NoRecord; end
+    class NoRecords; end
     class TooManyRecords; end
     
     class << self
       def get_records(domain)
-        get_dns_txt_records.select { |record| valid_record?(record) }
+        get_dns_txt_records(domain).
+        collect { |value| decode_txt_record(value) }.select(&:valid?)
       end
       
-      def valid_record?(record)
-        type, data = decode_txt_record(record)
-
-        case type
-        when :endpoint
-           extract_endpoint(data) != InvalidRecord
-        else
-          false
-        end
-      end
-      
-      def get_endpoint(domain)
-        records = get_records(domain)
-        
-        endpoint_records = records.select do |r| 
-          type, data = decode_txt_record(r)
-          type = :endpoint
-        end
-        
-        if endpoint_records.length > 0
-          TooManyRecords
-        elsif endpoint_records.length == 0
-          NoRecord
-        else
-          extract_endpoint(data)
-        end
-      end
-      
-      private 
-
-      def decode_txt_record(record)
-        record = record.gsub('"', '')
-        parts = record.split
+      def decode_txt_record(value)
+        parts = value.gsub('"', '').split
         
         # Reverse since Ruby #pop starts from end of list.
         parts.reverse!
 
         case parts.pop
         when "dps:endpoint"  
-          [:endpoint, parts]
+          Endpoint.new(parts)
         else
           InvalidRecord
         end
       end
-
-      def extract_endpoint(parts)
-        url_part = parts.find { |d| d =~ /^url=/ } 
+      
+      def get_endpoint(domain)
+        records = get_records(domain).select { |r| r.is_a?(Endpoint) }
         
-        if url_part.nil?
-          InvalidRecord
+        if records.length > 1
+          TooManyRecords
+        elsif records.length == 0
+          NoRecords
         else
-          begin
-            url = URI(url_part.sub(/^url=/, ''))
-
-            if !url.query.nil?
-              InvalidRecord
-            elsif !url.fragment.nil?
-              InvalidRecord
-            elsif url.port != 443
-              InvalidRecord
-            else
-              url.to_s
-            end
-          rescue URI::InvalidURIError
-            InvalidURIError
-          end
+          records[0].url
         end
       end
+      
+      private 
       
       def get_dns_txt_records(domain)
         result = []
@@ -90,6 +49,38 @@ module DPS
         end
         
         result
+      end
+    end
+    
+    class InvalidRecord
+      def self.valid?
+        false
+      end
+    end
+    
+    class Endpoint < Struct.new(:data)
+      def valid?
+        uri &&
+        uri.query.nil? &&
+        uri.fragment.nil? &&
+        uri.port == 443
+      end
+      
+      def uri
+        @uri ||= 
+          begin
+            URI(get_url_part.sub(/^url=/, ''))
+          rescue 
+            nil
+          end
+      end
+      
+      def url
+        uri && uri.to_s
+      end
+      
+      def get_url_part
+        data.find { |d| d =~ /^url=/ } 
       end
     end
     
