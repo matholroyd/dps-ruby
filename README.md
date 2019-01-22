@@ -19,3 +19,17 @@ Or install it yourself as:
 
     $ gem install dps
 
+
+## Examples
+
+`get_endpoint` returns the DPS endpoint for a domain. E.g.
+
+
+```ruby
+DPS::DNS.get_endpoint('example.com')
+
+# if `tworgy.com` has a DNS TXT record with the value 'dps:endpoint url=https://tworgy.com/dps'
+
+DPS::DNS.get_endpoint('tworgy.com') # returns 'https://tworgy.com/dps'
+```
+
