@@ -34,7 +34,7 @@ module DPS
         elsif records.length == 0
           NoRecords
         else
-          records[0].url
+          records[0]
         end
       end
       

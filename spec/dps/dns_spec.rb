@@ -42,12 +42,12 @@ RSpec.describe DPS::DNS do
   describe "get_endpoint" do
     let(:url) { double }
     let(:domain) { double }
-    let(:endpoint) { DPS::DNS::Endpoint.new(['url=https://dps.example.com']) }
+    let(:endpoint) { DPS::DNS::Endpoint.new }
     
     it "should return the url" do
       allow(subject).to receive(:get_records).and_return([endpoint])
       
-      expect(subject.get_endpoint(domain)).to eq('https://dps.example.com')
+      expect(subject.get_endpoint(domain)).to eq(endpoint)
     end
 
     it "should return error if more than 1 endpoint" do
