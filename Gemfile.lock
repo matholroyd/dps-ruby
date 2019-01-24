@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    dps (0.0.0)
+    dps (0.0.1)
       dnsruby (~> 1.61)
 
 GEM
