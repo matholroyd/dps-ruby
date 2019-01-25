@@ -9,3 +9,6 @@
 
 # rspec failure tracking
 .rspec_status
+
+# 'gem bump' assumes Gemfile.lock is not being checked in, so ignore it.
+Gemfile.lock
