@@ -29,9 +29,9 @@ module DPS
         records = get_records(domain).select { |r| r.is_a?(Endpoint) }
         
         if records.length > 1
-          TooManyRecords.new
+          TooManyRecords.new("Too many valid endpoint TXT records returned.")
         elsif records.length == 0
-          NoRecords.new
+          NoRecords.new("No valid endpoint TXT records found.")
         else
           records[0]
         end
@@ -43,8 +43,12 @@ module DPS
         result = []
         
         ::Dnsruby::DNS.open do |dns|
-          record = dns.getresource(domain, "TXT")
-          result << record.data
+          begin
+            record = dns.getresource(domain, "TXT")
+            result << record.data
+          rescue Dnsruby::NXDomain => e
+            raise InvalidRecord.new("Invalid domain.")
+          end
         end
         
         result

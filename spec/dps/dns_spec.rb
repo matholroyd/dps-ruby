@@ -53,13 +53,13 @@ RSpec.describe DPS::DNS do
     it "should return error if more than 1 endpoint" do
       allow(subject).to receive(:get_records).and_return([endpoint, endpoint])
       
-      expect(subject.get_endpoint(domain)).to eq(DPS::DNS::TooManyRecords.new)
+      expect(subject.get_endpoint(domain).message).to be =~ /Too many valid/
     end
 
     it "should return error if no record" do
       allow(subject).to receive(:get_records).and_return([])
       
-      expect(subject.get_endpoint(domain)).to eq(DPS::DNS::NoRecords.new)
+      expect(subject.get_endpoint(domain).message).to be =~ /No valid/
     end
   end
   
