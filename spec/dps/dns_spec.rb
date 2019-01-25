@@ -17,7 +17,7 @@ RSpec.describe DPS::DNS do
     end
 
     it "should return valid dps TXT records for the domain" do
-      allow(subject).to receive(:get_dns_txt_records).with(domain).and_return(
+      allow(subject).to receive(:get_txt_records).with(domain).and_return(
         [valid_value, invalid_value]
       )
       
@@ -29,13 +29,13 @@ RSpec.describe DPS::DNS do
     let(:endpoint) { double(DPS::DNS::Endpoint) }
     
     it "should return Endpoint when matches" do
-      expect(DPS::DNS::Endpoint).to receive(:new).with(['B', 'A']).and_return(endpoint)
+      expect(DPS::DNS::Endpoint).to receive(:new).with(['A', 'B']).and_return(endpoint)
       
       expect(subject.decode_txt_record('"dps:endpoint A B"')).to eq(endpoint)
     end
     
     it "should return error if no match" do
-      expect(subject.decode_txt_record('"dps:INCORRECT"')).to eq(DPS::DNS::InvalidRecord)
+      expect(subject.decode_txt_record('"dps:INCORRECT"')).to eq(DPS::DNS::InvalidRecord.new("Unexpected action 'dps:INCORRECT'"))
     end
   end
 
@@ -53,13 +53,13 @@ RSpec.describe DPS::DNS do
     it "should return error if more than 1 endpoint" do
       allow(subject).to receive(:get_records).and_return([endpoint, endpoint])
       
-      expect(subject.get_endpoint(domain)).to eq(DPS::DNS::TooManyRecords)
+      expect(subject.get_endpoint(domain)).to eq(DPS::DNS::TooManyRecords.new)
     end
 
     it "should return error if no record" do
       allow(subject).to receive(:get_records).and_return([])
       
-      expect(subject.get_endpoint(domain)).to eq(DPS::DNS::NoRecords)
+      expect(subject.get_endpoint(domain)).to eq(DPS::DNS::NoRecords.new)
     end
   end
   

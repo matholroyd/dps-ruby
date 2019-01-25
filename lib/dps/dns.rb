@@ -3,12 +3,9 @@ require 'dnsruby'
 module DPS
   class DNS
     
-    class NoRecords; end
-    class TooManyRecords; end
-    
     class << self
       def get_records(domain)
-        get_dns_txt_records(domain).
+        get_txt_records(domain).
         collect { |value| decode_txt_record(value) }.select(&:valid?)
       end
       
@@ -17,12 +14,14 @@ module DPS
         
         # Reverse since Ruby #pop starts from end of list.
         parts.reverse!
+        action = parts.pop
+        parts.reverse!
 
-        case parts.pop
+        case action
         when "dps:endpoint"  
           Endpoint.new(parts)
         else
-          InvalidRecord
+          InvalidRecord.new("Unexpected action '#{action}'")
         end
       end
       
@@ -30,9 +29,9 @@ module DPS
         records = get_records(domain).select { |r| r.is_a?(Endpoint) }
         
         if records.length > 1
-          TooManyRecords
+          TooManyRecords.new
         elsif records.length == 0
-          NoRecords
+          NoRecords.new
         else
           records[0]
         end
@@ -40,7 +39,7 @@ module DPS
       
       private 
       
-      def get_dns_txt_records(domain)
+      def get_txt_records(domain)
         result = []
         
         ::Dnsruby::DNS.open do |dns|
@@ -52,7 +51,9 @@ module DPS
       end
     end
     
-    class InvalidRecord
+    class NoRecords < StandardError; end
+    class TooManyRecords < StandardError; end
+    class InvalidRecord < StandardError
       def self.valid?
         false
       end
