@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    dps (0.0.1)
+    dps (0.0.2)
       dnsruby (~> 1.61)
 
 GEM
@@ -38,4 +38,4 @@ DEPENDENCIES
   rspec (~> 3.8)
 
 BUNDLED WITH
-   1.17.0.pre.1
+   1.17.3
