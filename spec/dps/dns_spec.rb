@@ -9,7 +9,7 @@ RSpec.describe DPS::DNS do
     let(:valid_value) { double }
     let(:invalid_value) { double }
     let(:valid_record) { double(DPS::DNS::Endpoint, valid?: true) }
-    let(:invalid_record) { double(DPS::DNS::Endpoint, valid?: false) }
+    let(:invalid_record) { DPS::DNS::InvalidRecord.new }
 
     before :each do
       allow(subject).to receive(:decode_txt_record).with(valid_value).and_return(valid_record)

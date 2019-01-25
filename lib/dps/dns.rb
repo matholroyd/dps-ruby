@@ -54,7 +54,7 @@ module DPS
     class NoRecords < StandardError; end
     class TooManyRecords < StandardError; end
     class InvalidRecord < StandardError
-      def self.valid?
+      def valid?
         false
       end
     end
