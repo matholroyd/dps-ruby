@@ -1,5 +1,5 @@
-RSpec.describe DPS do
+RSpec.describe Dps do
   it "has a version number" do
-    expect(DPS::VERSION).not_to be nil
+    expect(Dps::VERSION).not_to be nil
   end
 end

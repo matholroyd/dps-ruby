@@ -26,10 +26,10 @@ Or install it yourself as:
 
 
 ```ruby
-DPS::DNS.get_endpoint('example.com')
+Dps::DNS.get_endpoint('example.com')
 
 # if `tworgy.com` has a DNS TXT record with the value 'dps:endpoint url=https://tworgy.com/dps'
 
-DPS::DNS.get_endpoint('tworgy.com') # returns 'https://tworgy.com/dps'
+Dps::DNS.get_endpoint('tworgy.com') # returns 'https://tworgy.com/dps'
 ```
 

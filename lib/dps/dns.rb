@@ -1,6 +1,6 @@
 require 'dnsruby'
 
-module DPS
+module Dps
   class DNS
     
     class << self
