@@ -1,4 +1,6 @@
 require "bundler/setup"
+require 'rails'
+
 require "dps"
 
 RSpec.configure do |config|
