@@ -5,7 +5,7 @@ module Dps
 
     def show
       if Dps.endpoints.present?
-        render json: "Endpoints are: #{Dps.endpoints}"
+        render json: {endpoints: Dps.endpoints}
       else
         render json: "No endpoints specified", status: 501
       end
