@@ -8,6 +8,7 @@ module Dps
   class ProcNotSetError < StandardError; end
 
   mattr_accessor :endpoints
+  mattr_accessor :domains
   mattr_accessor :new_payment_endpoints_renderers
   self.new_payment_endpoints_renderers = {}
   
